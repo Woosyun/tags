@@ -3,7 +3,6 @@ import { useEffect, useState } from "react"
 
 export default function Page({ params }: { params: { id: string } }) {
   const { id } = params;
-  console.log('(post) id:', id);
   const [post, setPost] = useState<any>(null);
   
   useEffect(() => {
@@ -15,7 +14,7 @@ export default function Page({ params }: { params: { id: string } }) {
       
       const { post } = await res.json();
       console.log(post);
-      setPost(post);
+      setPost(JSON.parse(post));
     }
 
     fetchPost();
@@ -25,10 +24,15 @@ export default function Page({ params }: { params: { id: string } }) {
     return <div>Loading...</div>
   }
   
+  const time = new Date(Date.now());
+  const utcTime = time.toISOString();
+  const localTime = new Date(utcTime).toLocaleString();
+  
   return (
     <div>
       <h1>{post.title}</h1>
       <div>{post.content}</div>
+      <p>{localTime}</p>
     </div>
   )
 }

@@ -21,9 +21,9 @@ const Sidebar = ({
   }
   
   return (
-    <div className='mt-14 w-[250px] h-[600px] border-2 border-solid border-black p-2'>
+    <div className='w-[250px] h-[600px] border-2 border-solid border-gray-400 p-2'>
       <div className='flex flex-row gap-2'>
-        <Input type='text' placeholder='Search...' value={newTag} onChange={(e) => setNewTag(e.target.value)} />
+        <Input type='text' placeholder='tag...' value={newTag} onChange={(e) => setNewTag(e.target.value)} />
         <Button variant="outline" onClick={handleClick}>Add</Button>
       </div>
 
