@@ -4,9 +4,9 @@ const PostSchema = new Schema({
   title: String,
   author: String,
   content: String,
-  comments: [{ content: String, author: String, date: Date }],
-  date: { type: Date, default: Date.now },
-  tags: [String]
+  lastModified: { type: Date, default: Date.now },
+  tags: [String],
+  comments: [{ content: String, author: String, date: Date }]
 });
 
 const Post = models.Post || model('Post', PostSchema);

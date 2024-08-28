@@ -9,28 +9,32 @@ import {
 } from "@/components/ui/card"
 import { Badge } from './ui/badge'
 import { useRouter } from "next/navigation"
+import { PostCardT } from "@/lib/types"
 
 const PostCard = ({
   postCard
 }: {
-  postCard: any
+  postCard: PostCardT
 }) => {
   const router = useRouter();
-  
-  const handleClick = () => {
-    router.push(`/post/${encodeURIComponent(postCard.objectId)}`);
+
+  const handlePostCardClick = () => {
+    const queryString = new URLSearchParams({ returnUrl: window.location.href }).toString();
+    router.push(`/post/${encodeURIComponent(postCard._id)}?${queryString}`);
   }
+
+  const date = new Date(postCard?.lastModified);
   
   return (
-    <Card className='m-1 cursor-pointer hover:border-black' onClick={handleClick}>
+    <Card className='m-1 cursor-pointer hover:border-black' onClick={handlePostCardClick}>
       <CardHeader>
         <CardTitle>{postCard?.title}</CardTitle>
-        <CardDescription>{postCard?.description}</CardDescription>
       </CardHeader>
       <CardFooter>
         <div className='flex flex-row gap-2'>
-          <span><Badge>{postCard?.user}</Badge></span>
-          <span><Badge>{postCard?.lastModified}</Badge></span>
+          <span><Badge variant='outline' className='bg-slate-300'>{postCard?.author}</Badge></span>
+          <span><Badge variant='outline' className='bg-slate-200'>{date.toLocaleDateString()}</Badge></span>
+          {postCard?.tags.map((tag, idx) => (<Badge key={idx}>{tag}</Badge>))}
         </div>
       </CardFooter>
     </Card>

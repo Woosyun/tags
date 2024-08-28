@@ -1,11 +1,21 @@
 export type PostCardT = {
-  objectId: string;
+  _id: string;
   title: string;
-  description: string;
+  author: string;
   lastModified: Date;
-  user: string;
-};
-export type PostT = PostCardT & {
   tags: string[];
+};
+
+export type CommentT = {
+  author: string;
   content: string;
+  lastModified: Date;
+}
+export type PostT = {
+  title: string;
+  author: string;
+  content: string;
+  lastModified: Date;
+  comments: CommentT[];
+  tags: string[];
 };

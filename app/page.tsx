@@ -1,34 +1,41 @@
 'use client'
 import PostCard from '@/components/PostCard';
 import PaginationComponent from '@/components/PaginationComponent';
-import Sidebar from '@/components/Sidebar'
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import PostCreator from '@/components/PostCreator';
 import { useRouter } from 'next/navigation';
-
-const testContent = {
-  title: 'Test',
-  description: 'This is a test description',
-  lastModified: '2021-10-10',
-  user: 'testuser',
-  objectId: '1234',
-}
-const testContents: any[] = Array.from({length: 10}, () => testContent);
+import Searchbar from '@/components/Searchbar';
+import TagBadge from '@/components/TagBadge';
+import { PostCardT } from '@/lib/types';
 
 const page = () => {
-  const [postCards, setPostCards] = useState(testContents);
+  const [postCards, setPostCards] = useState<PostCardT[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const router = useRouter();
 
   const handlePostButtonClick = () => {
-    const queryString = new URLSearchParams({ tags: tags.join(',') }).toString();
+    const queryString = new URLSearchParams({ tags: tags.join(','), returnUrl: window.location.href }).toString();
     router.push(`/post/create?${queryString}`);
   }
   
+  const addTag = (tag: string): void => {
+    console.log('add tag: ', tag);
+    
+    const s = new Set(tags);
+    s.add(tag);
+    setTags(Array.from(s));
+  }
+  const removeTag = (tag: string): void => {
+    console.log('remove tag: ', tag);
+    
+    const s = new Set(tags);
+    s.delete(tag);
+    setTags(Array.from(s));
+  }
+  
   useEffect(() => {
-    const search = async () => {
+    const fetchPage = async () => {
       const res = await fetch('/api/search', {
         method: 'POST',
         headers: {
@@ -41,33 +48,33 @@ const page = () => {
         const { message } = await res.json();
         throw new Error('(home)' + message);
       }
-
+  
       const { postCards: postCardsPrimitive } = await res.json();
-      const postCardsJSON = JSON.parse(postCardsPrimitive);
-      console.log('(home)', postCardsJSON);
-      setPostCards(postCardsJSON);
+      // console.log('(home) post cards: ', postCardsPrimitive);
+      setPostCards(JSON.parse(postCardsPrimitive));
     }
 
-    search();
+    fetchPage();
   }, [tags]);
   
   return (
-    <div className='flex flex-row gap-2 p-2'>
-      <Sidebar tags={tags} setTags={setTags} />
+    <div className='flex flex-col gap-2'>
+      <Searchbar addTag={addTag} />
 
-      <div className='flex-grow p-2'>
-        <div className='flex flex-row max-h-[93vh]'>
-          <PaginationComponent />
-          <Button onClick={handlePostButtonClick}>post</Button>
-        </div>
-        <ScrollArea>
-          {postCards.map((postCard, idx) => (<PostCard postCard={postCard} key={idx} />))}
-        </ScrollArea>
+      <div className='max-w-[90vw] max-h-[10vh]'>
+        {tags.map((tag: string, idx: number) => <TagBadge key={idx} tag={tag} removeTag={removeTag} />)}
       </div>
+      
+      <ScrollArea>
+        {postCards.map((postCard, idx) => (<PostCard postCard={postCard} key={idx} />))}
+      </ScrollArea>
 
+      <div className='flex flex-row max-h-[93vh]'>
+        <PaginationComponent />
+        <Button onClick={handlePostButtonClick}>post</Button>
+      </div>
     </div>
   )
 }
-
 
 export default page

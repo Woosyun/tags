@@ -1,39 +1,56 @@
 'use client';
-import Sidebar from '@/components/Sidebar';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
 import { MDXEditorMethods } from '@mdxeditor/editor';
+import TagBadge from '@/components/TagBadge';
 
 const Editor = dynamic(() => import('@/components/editor/EditorComponent'), { ssr: false })
 
 const Page = () => {
   const searchParams = useSearchParams();
-  const baseTags = searchParams.get('tags')?.split(',') || [];
+  const paramTags = searchParams.get('tags')?.split(',')!;
+  const tags = paramTags.length===1 && paramTags[0]==='' ? [] : paramTags;
 
-  const [tags, setTags] = useState<string[]>(baseTags);
-  const [content, setContent] = useState('');
+  const returnUrl = searchParams.get('returnUrl');
+
+  const [content, setContent] = useState<string>('');
   const editorRef = useRef<MDXEditorMethods>(null);
+  const router = useRouter();
 
-  const handleChange = (e: any) => {
-    setContent(e);
+  const createPost = async () => {
+    const res = await fetch('/api/post/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        content,
+        tags,
+      }),
+    });
+
+    if (!res.ok) {
+      const { message } = await res.json();
+      alert('Failed to create post: ' + message);
+    }
+
+    router.push(returnUrl || '/');
   }
 
   return (
-    <div className='flex flex-row gap-10 p-2 items-center'>
-      <div className='flex flex-col gap-2'>
-        <div className='flex flex-row justify-between'>
-          <Button variant='outline' onClick={() => console.log(content)}>Upload</Button>
-          <Button variant='outline'>Cancel</Button>
-        </div>
-        <Sidebar tags={tags} setTags={setTags} />
+    <div className='flex flex-col gap-2 p-2 items-center'>
+      <div className='flex flex-row'>
+        <Button onClick={createPost}>Create Post</Button>
+        <Button onClick={() => router.push(returnUrl || '/')}>Cancel</Button>
       </div>
+      {tags.map((tag, idx) => <TagBadge key={idx} tag={tag} removeTag={null} />)}
       <div
         onClick={() => editorRef?.current?.focus()}
-        className='mt-10 flex-grow h-[80vh] overflow-auto border-2 border-solid border-gray-300'
+        className='w-[80vw] h-[80vh] overflow-auto border-2 border-solid border-gray-300'
       >
-        <Editor markdown={content} setMarkdown={handleChange} editorRef={editorRef}/>
+        <Editor markdown={content} setMarkdown={setContent} editorRef={editorRef}/>
       </div>
     </div>
   );

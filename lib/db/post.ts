@@ -5,11 +5,30 @@ import Post from "./models/post";
 export const getPost = async (id: string): Promise<PostT> => {
   try {
     await connectToDB();
-    const post = await Post.findOne({ objectId: id });
+    const post = await Post.findById(id).exec();
+
+    // console.log('(getPost) post: ', post);
     
     return post;
   } catch (error: any) {
     throw new Error('(getPost)'+error.message);
+  }
+}
+export const createPost = async (post: PostT): Promise<void> => {
+  try {
+    // console.log('(createPost) post: ', post);
+    await connectToDB();
+    await Post.create(post);
+  } catch (error: any) {
+    throw new Error('(createPost)->'+error.message);
+  }
+}
+export const deletePost = async (id: string): Promise<void> => {
+  try {
+    await connectToDB();
+    await Post.findByIdAndDelete(id).exec();
+  } catch (error: any) {
+    throw new Error('(deletePost)->'+error.message);
   }
 }
 
@@ -20,19 +39,22 @@ export const getPostCards = async (
 ): Promise<PostCardT[]> => {
   try {
     await connectToDB();
-    
-    const skip = pageNumber > 0 ? (pageNumber - 1) * pageSize : 0; // Calculate how many documents to skip
-    const posts = await Post.find(
-      { tags: { $all: tags } },
-      {
-        _id: 1,
-        title: 1,
-        description: 1,
-        lastModified: 1,
-        user: 1,
-      })
+
+    const query = tags.length > 0 ? { tags: { $all: tags } } : {};
+    const projection = {
+      _id: 1,
+      title: 1,
+      author: 1,
+      lastModified: 1,
+      tags: 1
+    };
+    const skip = pageNumber > 0 ? (pageNumber - 1) * pageSize : 0;
+    const posts = await Post.find(query, projection)
       .skip(skip)
-      .limit(pageSize);
+      .limit(pageSize)
+      .exec();
+    
+    // console.log('(getPostCards) posts: ', posts[0]);
 
     return posts;
   } catch (error: any) {
