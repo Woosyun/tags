@@ -8,6 +8,7 @@ export type PostCardT = {
 
 
 export type PostT = {
+  _id?: string;
   title: string;
   author: string;
   content: string;
@@ -16,7 +17,9 @@ export type PostT = {
 };
 
 export type CommentT = {
+  _id?: string;
   author: string;
   content: string;
-  date: Date;
+  lastModified: Date;
+  postId: string;
 }
