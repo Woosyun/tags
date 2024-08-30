@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
+import { Search } from "lucide-react";
 
 const Searchbar = ({
   addTag
@@ -18,14 +19,14 @@ const Searchbar = ({
   }
   
   return (
-    <form onSubmit={handleSubmit} className='flex flex-row gap-4 w-1/2 mx-auto'>
+    <form onSubmit={handleSubmit} className='flex flex-row'>
       <Input
         type='search'
         placeholder='search'
         value={tag}
         onChange={(e) => setTag(e.target.value)}
       />
-      <Button type='submit' variant='outline'>o</Button>
+      <Button type='submit'><Search /></Button>
     </form>
   )
 }

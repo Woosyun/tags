@@ -8,6 +8,8 @@ import { useRouter } from 'next/navigation';
 import Searchbar from '@/components/Searchbar';
 import TagBadge from '@/components/TagBadge';
 import { PostCardT } from '@/lib/types';
+import Sidebar from '@/components/Sidebar';
+import { FilePlus } from 'lucide-react';
 
 const page = () => {
   const [postCards, setPostCards] = useState<PostCardT[]>([]);
@@ -58,20 +60,24 @@ const page = () => {
   }, [tags, pageNumber]);
   
   return (
-    <div className='flex flex-col gap-2'>
-      <Searchbar addTag={addTag} />
+    <div className='flex min-h-screen w-full flex-col gap-2 bg-muted/40'>
+      <Sidebar />
+      
+      <div className='flex flex-row ml-14 gap-2 justify-between'>
+        <Searchbar addTag={addTag} />
+        <Button onClick={handlePostButtonClick} className='hover:bg-gray-100'><FilePlus /></Button>
+      </div>
 
-      <div className='max-w-[90vw] max-h-[10vh]'>
+      <div className='flex flex-row gap-2 ml-14'>
         {tags.map((tag: string, idx: number) => <TagBadge key={idx} tag={tag} removeTag={removeTag} />)}
       </div>
       
-      <ScrollArea className='flex flex-col max-h-[85vh]'>
+      <ScrollArea className='flex flex-col sm:gap-4 sm:py-4 sm:pl-14'>
         {postCards.map((postCard, idx) => (<PostCard postCard={postCard} key={idx} />))}
       </ScrollArea>
 
       <div className='flex flex-row max-h-[93vh]'>
         <PaginationComponent pageNumber={pageNumber} setPageNumber={setPageNumber} />
-        <Button onClick={handlePostButtonClick} variant="outline">post</Button>
       </div>
     </div>
   )

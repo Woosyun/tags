@@ -15,16 +15,10 @@ export const authOptions: NextAuthOptions = {
     })
   ],
   callbacks: {
-    async signIn({user, account, profile}: any): Promise<any> {
-      console.log('(signIn) user:', JSON.stringify(user, null, 2));
-      console.log('(signIn) account:', JSON.stringify(account, null, 2));
-      console.log('(signIn) profile:', JSON.stringify(profile, null, 2));
-      return true;
-    },
     async jwt({ token, account, profile }: any): Promise<any> {
-      console.log('(jwt) token:', JSON.stringify(token, null, 2));
-      console.log('(jwt) account:', JSON.stringify(account, null, 2));
-      console.log('(jwt) profile:', JSON.stringify(profile, null, 2));
+      // console.log('(jwt) token:', JSON.stringify(token, null, 2));
+      // console.log('(jwt) account:', JSON.stringify(account, null, 2));
+      // console.log('(jwt) profile:', JSON.stringify(profile, null, 2));
 
       if (account) {
         token.accessToken = account.accessToken;
@@ -36,8 +30,8 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }: any): Promise<any> {
-      console.log('(session) session: ', JSON.stringify(session, null, 2));
-      console.log('(session) token: ', JSON.stringify(token, null, 2));
+      // console.log('(session) session: ', JSON.stringify(session, null, 2));
+      // console.log('(session) token: ', JSON.stringify(token, null, 2));
 
       session.accessToken = token.accessToken;
       session.user.id = token.id;

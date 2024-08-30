@@ -26,7 +26,7 @@ const PostCard = ({
   const date = new Date(postCard?.lastModified);
   
   return (
-    <Card className='m-1 cursor-pointer hover:border-black' onClick={handlePostCardClick}>
+    <Card className='cursor-pointer hover:bg-gray-100' onClick={handlePostCardClick}>
       <CardHeader>
         <CardTitle>{postCard?.title}</CardTitle>
       </CardHeader>
