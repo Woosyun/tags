@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
   
   const { id, content } = await req.json();
   const targetPost = await getPost(id);
-  if (targetPost.author !== session.user?.name) {
+  if (targetPost.author !== session.user!.email) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 

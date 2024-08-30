@@ -1,19 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PostT } from '@/lib/types';
 import { createPost } from "@/lib/db/post";
+import { auth } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
+  const session = await auth();
+  if (!session || !session.user || !session.user.email)
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    
   try {
     const { content, tags } = await req.json();
     const title = content.split('\n')[0];
 
     const newPost: PostT = {
       title: title,
-      author: 'admin',
+      author: session!.user?.email?.toString() || 'Anonymous',
       content: content,
       lastModified: new Date(Date.now()),
       tags: tags,
-      comments: []
     };
     // console.log('(api/post/create) newPost: ', newPost);
     await createPost(newPost);

@@ -5,6 +5,7 @@ import { CommentT, PostT } from "@/lib/types";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react"
+import { signIn } from "next-auth/react";
 
 const Editor = dynamic(() => import('@/components/editor/EditorComponent'), { ssr: false })
 
@@ -16,6 +17,13 @@ export default function Page({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [readOnly, setReadOnly] = useState<boolean>(true);
   const [comments, setComments] = useState<CommentT[]>([]);
+  
+  const askForSignIn = () => {
+    const answer = confirm('You need to sign in to perform this action. Do you want to sign in?');
+    if (answer) {
+      signIn();
+    }
+  }
   
   const handleDeletion = async () => {
     const res = await fetch('/api/post/delete', {
@@ -29,6 +37,7 @@ export default function Page({ params }: { params: { id: string } }) {
     if (!res.ok) {
       const { message } = await res.json();
       alert(message);
+      askForSignIn();
       return;
       // throw new Error('(post)->'+message);
     }
@@ -52,6 +61,7 @@ export default function Page({ params }: { params: { id: string } }) {
     if (!res.ok) {
       const { message } = await res.json();
       alert(message);
+      askForSignIn();
       // throw new Error('(post)->'+message);
     }
 
@@ -73,6 +83,7 @@ export default function Page({ params }: { params: { id: string } }) {
     if(!res.ok) {
       const { message } = await res.json();
       alert(message);
+      askForSignIn();
       return;
       // throw new Error('(post)->'+message);
     }
