@@ -13,7 +13,8 @@ const page = () => {
   const [postCards, setPostCards] = useState<PostCardT[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const router = useRouter();
-
+  const [pageNumber, setPageNumber] = useState<number>(1);
+  
   const handlePostButtonClick = () => {
     const queryString = new URLSearchParams({ tags: tags.join(','), returnUrl: window.location.href }).toString();
     router.push(`/post/create?${queryString}`);
@@ -34,27 +35,27 @@ const page = () => {
     setTags(Array.from(s));
   }
   
-  useEffect(() => {
-    const fetchPage = async () => {
-      const res = await fetch('/api/search', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ tags, pageNumber: 1, pageSize: 10 }),
-      });
-      
-      if (!res.ok) {
-        const { message } = await res.json();
-        throw new Error('(home)' + message);
-      }
-  
-      const { postCards } = await res.json();
-      setPostCards(JSON.parse(postCards));
+  const fetchPage = async (pageNumber: number, pageSize: number) => {
+    const res = await fetch('/api/search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ tags, pageNumber, pageSize }),
+    });
+    
+    if (!res.ok) {
+      const { message } = await res.json();
+      throw new Error('(home)' + message);
     }
 
-    fetchPage();
-  }, [tags]);
+    const { postCards } = await res.json();
+    setPostCards(JSON.parse(postCards));
+  }
+
+  useEffect(() => {
+    fetchPage(pageNumber, 10);
+  }, [tags, pageNumber]);
   
   return (
     <div className='flex flex-col gap-2'>
@@ -69,7 +70,7 @@ const page = () => {
       </ScrollArea>
 
       <div className='flex flex-row max-h-[93vh]'>
-        <PaginationComponent />
+        <PaginationComponent pageNumber={pageNumber} setPageNumber={setPageNumber} />
         <Button onClick={handlePostButtonClick} variant="outline">post</Button>
       </div>
     </div>
