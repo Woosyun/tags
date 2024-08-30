@@ -28,7 +28,9 @@ export default function Page({ params }: { params: { id: string } }) {
 
     if (!res.ok) {
       const { message } = await res.json();
-      throw new Error('(post)->'+message);
+      alert(message);
+      return;
+      // throw new Error('(post)->'+message);
     }
 
     router.push(returnUrl || '/');
@@ -49,36 +51,35 @@ export default function Page({ params }: { params: { id: string } }) {
 
     if (!res.ok) {
       const { message } = await res.json();
-      throw new Error('(post)->'+message);
+      alert(message);
+      // throw new Error('(post)->'+message);
     }
 
     setReadOnly(true);
   }
   const handleCommentSubmit = async (e: any) => {
-    try {
-      e.preventDefault();
-      const res = await fetch('/api/comment/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: e.target[0].value,
-          id: id,
-        }),
-      });
+    e.preventDefault();
+    const res = await fetch('/api/comment/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        content: e.target[0].value,
+        id: id,
+      }),
+    });
 
-      if(!res.ok) {
-        const { message } = await res.json();
-        throw new Error('(post)->'+message);
-      }
-
-      const { comment: commentPrimitive } = await res.json();
-      const newComment: CommentT = { ...commentPrimitive, lastModified: new Date(commentPrimitive.lastModified) };
-      setComments([...comments, newComment]);
-    } catch (error: any) {
-      throw new Error('(post)->'+error.message);
+    if(!res.ok) {
+      const { message } = await res.json();
+      alert(message);
+      return;
+      // throw new Error('(post)->'+message);
     }
+
+    const { comment: commentPrimitive } = await res.json();
+    const newComment: CommentT = { ...commentPrimitive, lastModified: new Date(commentPrimitive.lastModified) };
+    setComments([...comments, newComment]);
   }
   
   useEffect(() => {
