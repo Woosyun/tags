@@ -49,9 +49,8 @@ const page = () => {
         throw new Error('(home)' + message);
       }
   
-      const { postCards: postCardsPrimitive } = await res.json();
-      // console.log('(home) post cards: ', postCardsPrimitive);
-      setPostCards(JSON.parse(postCardsPrimitive));
+      const { postCards } = await res.json();
+      setPostCards(JSON.parse(postCards));
     }
 
     fetchPage();
@@ -65,13 +64,13 @@ const page = () => {
         {tags.map((tag: string, idx: number) => <TagBadge key={idx} tag={tag} removeTag={removeTag} />)}
       </div>
       
-      <ScrollArea>
+      <ScrollArea className='flex flex-col max-h-[85vh]'>
         {postCards.map((postCard, idx) => (<PostCard postCard={postCard} key={idx} />))}
       </ScrollArea>
 
       <div className='flex flex-row max-h-[93vh]'>
         <PaginationComponent />
-        <Button onClick={handlePostButtonClick}>post</Button>
+        <Button onClick={handlePostButtonClick} variant="outline">post</Button>
       </div>
     </div>
   )

@@ -6,7 +6,6 @@ const PostSchema = new Schema({
   content: String,
   lastModified: { type: Date, default: Date.now },
   tags: [String],
-  comments: [{ content: String, author: String, date: Date }]
 });
 
 const Post = models.Post || model('Post', PostSchema);

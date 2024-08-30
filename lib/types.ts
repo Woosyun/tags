@@ -6,16 +6,17 @@ export type PostCardT = {
   tags: string[];
 };
 
-export type CommentT = {
-  author: string;
-  content: string;
-  lastModified: Date;
-}
+
 export type PostT = {
   title: string;
   author: string;
   content: string;
   lastModified: Date;
-  comments: CommentT[];
   tags: string[];
 };
+
+export type CommentT = {
+  author: string;
+  content: string;
+  date: Date;
+}

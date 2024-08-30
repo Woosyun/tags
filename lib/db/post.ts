@@ -1,4 +1,4 @@
-import { PostCardT, PostT } from "../types";
+import { CommentT, PostCardT, PostT } from "../types";
 import connectToDB from "./connect";
 import Post from "./models/post";
 
@@ -29,6 +29,16 @@ export const deletePost = async (id: string): Promise<void> => {
     await Post.findByIdAndDelete(id).exec();
   } catch (error: any) {
     throw new Error('(deletePost)->'+error.message);
+  }
+}
+export const updatePost = async (id: string, content: string, date: Date): Promise<void> => {
+  try {
+    await connectToDB();
+    console.log('(updatePost) id, content, date: ', id, content, date);
+    const newPost = await Post.findByIdAndUpdate(id, { content: content, lastModified: date }).exec();
+    console.log('(updatePost) new post: ', newPost);
+  } catch (error: any) {
+    throw new Error('(updatePost)->'+error.message);
   }
 }
 
