@@ -5,7 +5,7 @@ import { auth } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
   const session = await auth();
-  if (!session || !session.user || !session.user.email)
+  if (!session || !session.user || !session.user.name)
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     
   try {
@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
 
     const newPost: PostT = {
       title: title,
-      author: session!.user?.email?.toString() || 'Anonymous',
+      author: session!.user?.name?.toString()!,
       content: content,
       lastModified: new Date(Date.now()),
       tags: tags,

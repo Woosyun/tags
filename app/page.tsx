@@ -10,6 +10,7 @@ import TagBadge from '@/components/TagBadge';
 import { PostCardT } from '@/lib/types';
 import Sidebar from '@/components/Sidebar';
 import { FilePlus } from 'lucide-react';
+import { checkUserName } from '@/lib/check';
 
 const page = () => {
   const [postCards, setPostCards] = useState<PostCardT[]>([]);
@@ -55,6 +56,10 @@ const page = () => {
     setPostCards(JSON.parse(postCards));
   }
 
+  useEffect(() => {
+    checkUserName();
+  }, []);
+  
   useEffect(() => {
     fetchPage(pageNumber, 10);
   }, [tags, pageNumber]);

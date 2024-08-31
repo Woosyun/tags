@@ -4,14 +4,14 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   const session = await auth();
-  if (!session || !session.user || !session.user.email) {
+  if (!session || !session.user || !session.user.name) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
   
   try {
     const { id, content } = await req.json();
     const newComment = {
-      author: session.user!.email?.toString()!,
+      author: session.user!.name?.toString()!,
       content,
       postId: id,
       lastModified: new Date(Date.now()),

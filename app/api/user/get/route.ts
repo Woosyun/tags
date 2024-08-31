@@ -4,6 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET() {
   const session = await auth();
 
+  console.log('(api/user/get)session: ', session);
+  
   if (!session) {
     return NextResponse.json({ user: null }, { status: 200 });
   }

@@ -1,10 +1,11 @@
 'use client';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
 import { MDXEditorMethods } from '@mdxeditor/editor';
 import TagBadge from '@/components/TagBadge';
+import { checkUserName } from '@/lib/check';
 
 const Editor = dynamic(() => import('@/components/editor/EditorComponent'), { ssr: false })
 
@@ -38,6 +39,10 @@ const Page = () => {
 
     router.push(returnUrl || '/');
   }
+
+  useEffect(() => {
+    checkUserName();
+  }, []);
 
   return (
     <div className='flex flex-col gap-2 p-2 items-center'>

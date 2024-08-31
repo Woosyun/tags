@@ -6,6 +6,9 @@ import type {
   NextApiRequest,
   NextApiResponse,
 } from "next"
+import connectToDB from './db/connect';
+import User from './db/models/user';
+import { createUser } from './db/user';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -30,16 +33,20 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }: any): Promise<any> {
-      // console.log('(session) session: ', JSON.stringify(session, null, 2));
       // console.log('(session) token: ', JSON.stringify(token, null, 2));
 
       session.accessToken = token.accessToken;
       session.user.id = token.id;
-      session.user.name = token.name;
       session.user.email = token.email;
+
+      await connectToDB();
+      const targetUser = await User.findOne({ email: token.email.toString() });
       
+      session.user.name = targetUser?.name || token.email;
+      
+      // console.log('(session) session: ', JSON.stringify(session, null, 2));
       return session;
-    }
+    },
   }
 }
 

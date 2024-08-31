@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react"
 import { signIn } from "next-auth/react";
+import { checkUserName } from "@/lib/check";
 
 const Editor = dynamic(() => import('@/components/editor/EditorComponent'), { ssr: false })
 
@@ -19,13 +20,15 @@ export default function Page({ params }: { params: { id: string } }) {
   const [comments, setComments] = useState<CommentT[]>([]);
   
   const askForSignIn = () => {
-    const answer = confirm('You need to sign in to perform this action. Do you want to sign in?');
-    if (answer) {
-      signIn();
-    }
+    return;
   }
   
   const handleDeletion = async () => {
+    const anwser = confirm('Are you sure you want to delete this post?');
+    if (!anwser) {
+      return;
+    }
+    
     const res = await fetch('/api/post/delete', {
       method: 'POST',
       headers: {
@@ -94,6 +97,8 @@ export default function Page({ params }: { params: { id: string } }) {
   }
   
   useEffect(() => {
+    checkUserName();
+    
     const fetchPost = async () => {
       const res = await fetch(`/api/post/get/${id}`);
       if (!res.ok) {

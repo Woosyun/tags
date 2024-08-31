@@ -23,3 +23,10 @@ export type CommentT = {
   lastModified: Date;
   postId: string;
 }
+
+export type UserT = {
+  name: string;
+  email: string;
+  posts: string[];
+  comments: string[];
+}
