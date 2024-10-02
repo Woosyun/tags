@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const page = () => {
+const Page = () => {
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
@@ -21,4 +21,4 @@ const page = () => {
   )
 }
 
-export default page;
+export default Page;

@@ -12,7 +12,7 @@ import Sidebar from '@/components/Sidebar';
 import { FilePlus } from 'lucide-react';
 import { checkUserName } from '@/lib/check';
 
-const page = () => {
+const Page = () => {
   const [postCards, setPostCards] = useState<PostCardT[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const router = useRouter();
@@ -89,4 +89,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

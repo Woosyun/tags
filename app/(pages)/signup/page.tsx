@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
-export default function page() {
+export default function Page() {
   const [name, setName] = useState<string>('');
   const router = useRouter();
 
