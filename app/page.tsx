@@ -65,25 +65,26 @@ const page = () => {
   }, [tags, pageNumber]);
   
   return (
-    <div className='flex min-h-screen w-full flex-col gap-2 bg-muted/40'>
-      <Sidebar />
+    <div className='max-h-screen screen min-h-screen min-w-screen p-4'>
       
-      <div className='flex flex-row ml-14 gap-2 justify-between'>
-        <Searchbar addTag={addTag} />
+      <header className='flex flex-row gap-2 justify-between'>
         <Button onClick={handlePostButtonClick} className='hover:bg-gray-100'><FilePlus /></Button>
-      </div>
+        <Searchbar addTag={addTag} />
+        <Sidebar />
+      </header>
 
-      <div className='flex flex-row gap-2 ml-14'>
+      <div className='flex flex-row gap-2'>
         {tags.map((tag: string, idx: number) => <TagBadge key={idx} tag={tag} removeTag={removeTag} />)}
       </div>
-      
-      <ScrollArea className='flex flex-col sm:gap-4 sm:py-4 sm:pl-14'>
+
+      <ScrollArea className='flex flex-col max-h-[85vh] sm:gap-4 sm:py-4 '>
         {postCards.map((postCard, idx) => (<PostCard postCard={postCard} key={idx} />))}
       </ScrollArea>
-
-      <div className='flex flex-row max-h-[93vh]'>
+      
+      <footer className='flex flex-row'>
         <PaginationComponent pageNumber={pageNumber} setPageNumber={setPageNumber} />
-      </div>
+      </footer>
+
     </div>
   )
 }

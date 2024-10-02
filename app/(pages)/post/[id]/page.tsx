@@ -160,7 +160,7 @@ export default function Page({ params }: { params: { id: string } }) {
             placeholder='write a comment'
             className='flex-grow resize-none'
           />
-          <Button type='submit'>submit</Button>
+          <Button type='submit' className='hover:bg-gray-200'>submit</Button>
         </form>
 
         {comments.map((comment, i) => (<Comment key={i} comment={comment} />))}
@@ -171,8 +171,8 @@ export default function Page({ params }: { params: { id: string } }) {
 
 function Comment({ comment }: {comment: CommentT}) {
   return (
-    <div className='border-2 border-solid border-gray-200'>
-      <p className='flex flex-row justify-between text-sm'>
+    <div className='border-2 border-solid border-gray-100 p-1'>
+      <p className='flex flex-row justify-between text-sm mb-2'>
         <span className='text-gray-300'>{comment.author}</span>
         <span className='text-gray-300'>{comment.lastModified.toLocaleDateString()}</span>
       </p>

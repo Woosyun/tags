@@ -19,12 +19,15 @@ const Searchbar = ({
   }
   
   return (
-    <form onSubmit={handleSubmit} className='flex flex-row'>
+    <form
+      onSubmit={handleSubmit}
+      className='flex flex-row'>
       <Input
         type='search'
         placeholder='search'
         value={tag}
         onChange={(e) => setTag(e.target.value)}
+        className='rounded'
       />
       <Button type='submit'><Search /></Button>
     </form>
