@@ -10,7 +10,7 @@ import { checkUserName } from '@/lib/check';
 
 const Editor = dynamic(() => import('@/components/editor/EditorComponent'), { ssr: false })
 
-const Page = () => {
+const Create = () => {
   const searchParams = useSearchParams();
   const paramTags = searchParams.get('tags')?.split(',')!;
   const tags = paramTags.length === 1 && paramTags[0] === '' ? [] : paramTags;
@@ -46,22 +46,26 @@ const Page = () => {
   }, []);
 
   return (
-    <Suspense>
-      <div className='flex flex-col gap-2 p-2 items-center'>
-        <div className='flex flex-row'>
-          <Button onClick={createPost}>Create Post</Button>
-          <Button onClick={() => router.push(returnUrl || '/')}>Cancel</Button>
-        </div>
-        {tags.map((tag, idx) => <TagBadge key={idx} tag={tag} removeTag={null} />)}
-        <div
-          onClick={() => editorRef?.current?.focus()}
-          className='w-[80vw] h-[80vh] overflow-auto border-2 border-solid border-gray-300'
-        >
-          <Editor markdown={content} setMarkdown={setContent} editorRef={editorRef} />
-        </div>
+    <div className='flex flex-col gap-2 p-2 items-center'>
+      <div className='flex flex-row'>
+        <Button onClick={createPost}>Create Post</Button>
+        <Button onClick={() => router.push(returnUrl || '/')}>Cancel</Button>
       </div>
-    </Suspense>
+      {tags.map((tag, idx) => <TagBadge key={idx} tag={tag} removeTag={null} />)}
+      <div
+        onClick={() => editorRef?.current?.focus()}
+        className='w-[80vw] h-[80vh] overflow-auto border-2 border-solid border-gray-300'
+      >
+        <Editor markdown={content} setMarkdown={setContent} editorRef={editorRef} />
+      </div>
+    </div>
   );
 };
+
+const Page = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <Create />
+  </Suspense>
+);
 
 export default Page;
